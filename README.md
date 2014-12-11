@@ -1,9 +1,9 @@
 # VBTree
 
-[![CI Status](http://img.shields.io/travis/Victor Berga/VBTree.svg?style=flat)](https://travis-ci.org/Victor Berga/VBTree)
-[![Version](https://img.shields.io/cocoapods/v/VBTree.svg?style=flat)](http://cocoadocs.org/docsets/VBTree)
-[![License](https://img.shields.io/cocoapods/l/VBTree.svg?style=flat)](http://cocoadocs.org/docsets/VBTree)
-[![Platform](https://img.shields.io/cocoapods/p/VBTree.svg?style=flat)](http://cocoadocs.org/docsets/VBTree)
+[![CI Status](http://img.shields.io/travis/vbergae/VBTree.svg?style=flat-square)](https://travis-ci.org/vbergae/VBTree)
+[![Version](https://img.shields.io/cocoapods/v/VBTree.svg?style=flat-square)](http://cocoadocs.org/docsets/VBTree)
+[![License](https://img.shields.io/cocoapods/l/VBTree.svg?style=flat-square)](http://cocoadocs.org/docsets/VBTree)
+[![Platform](https://img.shields.io/cocoapods/p/VBTree.svg?style=flat-square)](http://cocoadocs.org/docsets/VBTree)
 
 You use VBTree to create tree structures that represent hierarchical organizations
 of information. 
