@@ -1,0 +1,11 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'VBTree', :exclusive => true do
+  pod "VBTree", :path => "../"
+end
+
+target 'Tests', :exclusive => true do
+  pod "VBTree", :path => "../"
+
+  
+end
