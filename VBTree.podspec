@@ -25,8 +25,8 @@ Pod::Spec.new do |s|
   s.author           = { "Victor Berga" => "vbergae@gmail.com" }
   s.source           = { :git => "https://github.com/vbergae/VBTree.git", :tag => s.version.to_s }
 
-  s.platform     = :ios
-  s.platform     = :osx
+  s.ios.platform     = :ios, '7.0'
+  s.osx.platform     = :osx, '10.9'
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes'
