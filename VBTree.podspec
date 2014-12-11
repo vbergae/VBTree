@@ -10,29 +10,25 @@
 Pod::Spec.new do |s|
   s.name             = "VBTree"
   s.version          = "0.1.0"
-  s.summary          = "A short description of VBTree."
+  s.summary          = "A wrapper around CFTree"
   s.description      = <<-DESC
-                       An optional longer description of VBTree
+    You use VBTree to create tree structures that represent hierarchical organizations
+    of information.
 
-                       * Markdown format.
-                       * Don't worry about the indent, we strip it!
-                       DESC
-  s.homepage         = "https://github.com/<GITHUB_USERNAME>/VBTree"
-  # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
+    In such structures, each tree node has exactly one parent tree
+    (except for the root tree, which has no parent) and can have multiple children.
+    Each VBTree object in the structure has a context associated with it; this context
+    includes some program-defined data.
+    DESC
+  s.homepage         = "https://github.com/vbergae/VBTree"
   s.license          = 'MIT'
-  s.author           = { "Victor Berga" => "victor.berga@bitmonlab.com" }
-  s.source           = { :git => "https://github.com/<GITHUB_USERNAME>/VBTree.git", :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.author           = { "Victor Berga" => "vbergae@gmail.com" }
+  s.source           = { :git => "https://github.com/vbergae/VBTree.git", :tag => s.version.to_s }
 
-  s.platform     = :ios, '7.0'
+  s.platform     = :ios
+  s.platform     = :osx
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes'
-  s.resource_bundles = {
-    'VBTree' => ['Pod/Assets/*.png']
-  }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.public_header_files = 'Pod/Classes/**/*.h'
 end

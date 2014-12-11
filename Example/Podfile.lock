@@ -1,0 +1,14 @@
+PODS:
+  - VBTree (0.1.0)
+
+DEPENDENCIES:
+  - VBTree (from `../`)
+
+EXTERNAL SOURCES:
+  VBTree:
+    :path: ../
+
+SPEC CHECKSUMS:
+  VBTree: 556add866fa507caac4330c71486fe6ffbd56a9e
+
+COCOAPODS: 0.34.4
