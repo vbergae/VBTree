@@ -1,14 +1,14 @@
 PODS:
-  - VBTree (0.1.0)
+  - VBTree (0.1.2)
 
 DEPENDENCIES:
-  - VBTree (from `../`)
+  - VBTree (from `../VBTree.podspec`)
 
 EXTERNAL SOURCES:
   VBTree:
-    :path: ../
+    :path: ../VBTree.podspec
 
 SPEC CHECKSUMS:
-  VBTree: c4de579c8bd165c1fed5f1fab93a12569d677746
+  VBTree: 1ec418a66a57b5b361a0e0a16d6bece224f6ed5f
 
 COCOAPODS: 0.34.4
