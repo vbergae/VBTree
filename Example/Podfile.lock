@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  VBTree: 556add866fa507caac4330c71486fe6ffbd56a9e
+  VBTree: c4de579c8bd165c1fed5f1fab93a12569d677746
 
 COCOAPODS: 0.34.4
