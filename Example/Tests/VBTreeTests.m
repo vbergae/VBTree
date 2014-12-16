@@ -80,7 +80,7 @@ describe(@"VBTree", ^{
     
     expect(parent.childCount).to.equal(3);
     expect(tree.nextSibling).to.equal(sibling2);
-    expect(tree.nextSibling).to.equal(sibling1);
+    expect(sibling2.nextSibling).to.equal(sibling1);
   });
   
   it(@"can prepend a child", ^{
