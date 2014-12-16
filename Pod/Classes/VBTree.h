@@ -38,7 +38,7 @@
 /**
  Returns the context of the receiver
  */
-@property (readonly) id context;
+@property id context;
 /**
  Returns the parent of the receiver
  */
@@ -114,5 +114,20 @@
  */
 - (VBTree *)childAtIndex:(NSUInteger)index;
 
+/**
+ @name Perform an Operation on Tree Elements
+ */
+
+/**
+ Calls a function once for each immediate child of a tree.
+ 
+ @param applier The callback function to call once for each child in tree. The 
+                function must be able to apply to all the values in the tree.
+ @param context Value that is passed to the applier function, but is otherwise unused   
+                by this function.
+ */
+
+- (void)applyBlockToChildren:(void(^)(VBTree *child, id context))block
+                     context:(id)context;
 
 @end

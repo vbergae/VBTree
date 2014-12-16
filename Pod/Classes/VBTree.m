@@ -8,12 +8,14 @@
 
 #import "VBTree.h"
 
+static VBTree * CFTreeToVBTree(CFTreeRef tree);
+static void TreeApplierFunction(const void *value, void *context);
+static NSString * const kFunctionContextBlockKey    = @"block";
+static NSString * const kFunctionContextContextKey  = @"context";
+
 @interface VBTree()
 
 @property CFTreeRef tree;
-@property (readwrite) id context;
-
-- (VBTree *)CFTreeToVBTree:(CFTreeRef)tree;
 
 @end
 
@@ -26,7 +28,7 @@
 {
   CFTreeRef rootTree = CFTreeFindRoot(self.tree);
   
-  return [self CFTreeToVBTree:rootTree];
+  return CFTreeToVBTree(rootTree);
 }
 
 - (NSUInteger)childCount
@@ -43,7 +45,7 @@
   NSMutableArray *children = [[NSMutableArray alloc] initWithCapacity:count];
   for (NSUInteger i = 0; i < count; ++i) {
     CFTreeRef tree = childrenTrees[i];
-    VBTree *object = [self CFTreeToVBTree:tree];
+    VBTree *object = CFTreeToVBTree(tree);
     
     [children addObject:object];
   }
@@ -55,20 +57,20 @@
 {
   CFTreeRef parentTree = CFTreeGetParent(self.tree);
   
-  return [self CFTreeToVBTree:parentTree];
+  return CFTreeToVBTree(parentTree);
 }
 
 - (VBTree *)firstChild
 {
   CFTreeRef childTree = CFTreeGetFirstChild(self.tree);
   
-  return [self CFTreeToVBTree:childTree];
+  return CFTreeToVBTree(childTree);
 }
 
 - (VBTree *)nextSibling
 {
   CFTreeRef sibling = CFTreeGetNextSibling(self.tree);
-  return [self CFTreeToVBTree:sibling];
+  return CFTreeToVBTree(sibling);
 }
 
 #pragma mark -
@@ -129,13 +131,25 @@
 {
   CFTreeRef childTree = CFTreeGetChildAtIndex(self.tree, index);
   
-  return [self CFTreeToVBTree:childTree];
+  return CFTreeToVBTree(childTree);
 }
 
 #pragma mark -
-#pragma mark Private methods
+#pragma mark Performing an Operation on Tree Elements
 
-- (VBTree *)CFTreeToVBTree:(CFTreeRef)tree
+- (void)applyBlockToChildren:(void (^)(VBTree *, id))block context:(id)context
+{
+  NSDictionary *functionContext = @{kFunctionContextBlockKey: block,
+                                    kFunctionContextContextKey: context};
+  
+  CFTreeApplyFunctionToChildren(self.tree,
+                                &TreeApplierFunction,
+                                (__bridge void *)(functionContext));
+}
+
+@end
+
+VBTree * CFTreeToVBTree(CFTreeRef tree)
 {
   if (tree == NULL)
     return nil;
@@ -146,4 +160,15 @@
   return (__bridge VBTree *)ctx.info;
 }
 
-@end
+static void TreeApplierFunction(const void *value, void *context) {
+  void(^block)(VBTree *, id) = [(__bridge NSDictionary *)context
+                                valueForKey:kFunctionContextBlockKey];
+  id blockContext = [(__bridge NSDictionary *)context
+                     valueForKey:kFunctionContextContextKey];
+  
+  if (block) {
+    CFTreeRef treeRef = (CFTreeRef)value;
+    VBTree *tree = CFTreeToVBTree(treeRef);
+    block(tree, blockContext);
+  }
+}
