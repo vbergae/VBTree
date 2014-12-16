@@ -7,6 +7,6 @@ cache: cocoapods
 podfile: Example/Podfile
 before_install: cd Example && pod install && cd -
 install:
-- gem install xcpretty --no-rdoc --no-ri --no-document --quiet
+- sh script/bootstrap.sh
 script:
-- set -o pipefail && xcodebuild test -workspace Example/VBTree.xcworkspace -scheme VBTree -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty -c
+- sh script/test.sh

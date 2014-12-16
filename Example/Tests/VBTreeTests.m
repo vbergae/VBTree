@@ -6,163 +6,132 @@
 //  Copyright (c) 2014 Victor Berga. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <XCTest/XCTest.h>
+#import <Specta/Specta.h>
+#define EXP_SHORTHAND
+#import <Expecta/Expecta.h>
+
 #import <VBTree/VBTree.h>
 
-@interface VBTreeTests : XCTestCase
+SpecBegin(VBTree)
 
-@property VBTree *tree;
-
-@end
-
-@implementation VBTreeTests
-
-- (void)setUp
-{
-  [super setUp];
+describe(@"VBTree", ^{
+  __block VBTree *tree;
   
-  self.tree = [[VBTree alloc] initWithContext:@"root"];
-}
-
-- (void)tearDown
-{
-  self.tree = nil;
+  beforeEach(^{
+    tree = [[VBTree alloc] initWithContext:@"testable"];
+  });
   
-  [super tearDown];
-}
-
-#pragma mark -
-#pragma mark Properties
-
-- (void)test_context
-{
-  id result = self.tree.context;
-  XCTAssertEqualObjects(result, @"root");
-}
-
-- (void)test_root
-{
-  VBTree *child = [[VBTree alloc] initWithContext:@"child"];
-  [self.tree appendChild:child];
+  it(@"can be created", ^{
+    expect(tree).notTo.beNil();
+  });
   
-  VBTree *root = child.root;
-  XCTAssertTrue(self.tree == root);
-}
-
-- (void)test_childCount
-{
-  [self addChildren:3];
+  it(@"has a context", ^{
+    expect(tree.context).to.equal(@"testable");
+  });
   
-  XCTAssertTrue(self.tree.childCount == 3);
-}
-
-- (void)test_children
-{
-  [self addChildren:5];
-  
-  NSArray *result = self.tree.children;
-  XCTAssertNotNil(result);
-  XCTAssertTrue(result.count == 5);
-}
-
-- (void)test_parent
-{
-  VBTree *parent = [[VBTree alloc] initWithContext:@"parent"];
-  [parent appendChild:self.tree];
-  
-  id result = self.tree.parent;
-  XCTAssertTrue(result == parent);
-}
-
-- (void)test_firstChild
-{
-  NSArray *children = [self addChildren:2];
-  VBTree *firstChild = self.tree.firstChild;
-  
-  XCTAssertTrue(children[0] == firstChild);
-}
-
-#pragma mark -
-#pragma mark Modifying a Tree
-
-- (void)test_appendChild
-{
-  VBTree *child = [[VBTree alloc] initWithContext:@"child"];
-  [self.tree appendChild:child];
-  
-  XCTAssertTrue(self.tree.childCount == 1);
-}
-
-- (void)test_insertSibling
-{
-  VBTree *sibling = [[VBTree alloc] initWithContext:@"sibling"];
-  [self.tree insertSibling:sibling];
-  
-  id result = self.tree.nextSibling;
-  XCTAssertTrue(sibling == result);
-}
-
-- (void)test_removeAllChildren
-{
-  [self addChildren:5];
-  XCTAssertTrue(self.tree.childCount == 5);
-  
-  [self.tree removeAllChildren];
-  XCTAssertTrue(self.tree.childCount == 0);
-}
-
-- (void)test_prependChild
-{
-  [self addChildren:2];
-  
-  VBTree *prepended = [[VBTree alloc] initWithContext:@"prepended"];
-  [self.tree prependChild:prepended];
-  
-  XCTAssertTrue(self.tree.children[0] == prepended);
-}
-
-- (void)test_remove
-{
-  VBTree *parent = [[VBTree alloc] initWithContext:@"parent"];
-  [parent appendChild:self.tree];
-  
-  XCTAssertNotNil(self.tree.parent);
-  
-  [self.tree remove];
-  XCTAssertTrue(parent.childCount == 0);
-  XCTAssertNil(self.tree.parent);
-}
-
-#pragma mark -
-#pragma mark Examining a Tree
-
-- (void)test_childAtIndex
-{
-  NSArray *children = [self addChildren:3];
-  
-  XCTAssertTrue([self.tree childAtIndex:0] == children[0]);
-  XCTAssertTrue([self.tree childAtIndex:1] == children[1]);
-  XCTAssertTrue([self.tree childAtIndex:2] == children[2]);
-}
-
-#pragma mark -
-#pragma mark Helpers
-
-- (NSArray *)addChildren:(NSUInteger)childCount
-{
-  NSMutableArray *contexts = [[NSMutableArray alloc] initWithCapacity:childCount];
-  
-  for (NSUInteger i = 0; i < childCount; ++i) {
-    id object = @(i);
+  it(@"can have a root", ^{
+    VBTree *root = [[VBTree alloc] initWithContext:@"root"];
+    VBTree *child = [[VBTree alloc] initWithContext:@"child"];
     
-    VBTree *child = [[VBTree alloc] initWithContext:object];
-    [self.tree appendChild:child];
+    [child appendChild:tree];
+    [root appendChild:child];
     
-    [contexts addObject:child];
-  }
+    expect(tree.root).to.equal(root);
+  });
   
-  return contexts;
-}
+  it(@"can have a parent", ^{
+    VBTree *parent = [[VBTree alloc] initWithContext:@"parent"];
+    [parent appendChild:tree];
+    
+    expect(tree.parent).notTo.beNil();
+    expect(tree.parent).to.equal(parent);
+  });
+  
+  it(@"can append children", ^{
+    VBTree *child1 = [[VBTree alloc] initWithContext:@"child1"];
+    VBTree *child2 = [[VBTree alloc] initWithContext:@"child2"];
+    
+    [tree appendChild:child1];
+    [tree appendChild:child2];
+    
+    expect(tree.childCount).to.equal(2);
+    expect(tree.children).to.contain(child1);
+    expect(tree.children).to.contain(child2);
+  });
+  
+  it(@"can return first child", ^{
+    VBTree *child1 = [[VBTree alloc] initWithContext:@"child1"];
+    VBTree *child2 = [[VBTree alloc] initWithContext:@"child2"];
+    
+    [tree appendChild:child1];
+    [tree appendChild:child2];
+    
+    expect(tree.firstChild).to.equal(child1);
+  });
+  
+  it(@"can insert siblings", ^{
+    VBTree *parent   = [[VBTree alloc] initWithContext:@"parent"];
+    VBTree *sibling1 = [[VBTree alloc] initWithContext:@"sib1"];
+    VBTree *sibling2 = [[VBTree alloc] initWithContext:@"sib2"];
+    
+    [parent appendChild:tree];
+    [tree insertSibling:sibling1];
+    [tree insertSibling:sibling2];
+    
+    expect(parent.childCount).to.equal(3);
+    expect(tree.nextSibling).to.equal(sibling2);
+    expect(sibling2.nextSibling).to.equal(sibling1);
+  });
+  
+  it(@"can prepend a child", ^{
+    VBTree *prep1 = [[VBTree alloc] initWithContext:@"prepended1"];
+    [tree prependChild:prep1];
+    expect(tree.firstChild).to.equal(prep1);
+    
+    VBTree *prep2 = [[VBTree alloc] initWithContext:@"prepended2"];
+    [tree prependChild:prep2];
+    expect(tree.firstChild).to.equal(prep2);
+  });
+  
+  it(@"can remove all children", ^{
+    VBTree *child1 = [[VBTree alloc] initWithContext:@"child1"];
+    VBTree *child2 = [[VBTree alloc] initWithContext:@"child2"];
+    
+    [tree appendChild:child1];
+    [tree appendChild:child2];
+    
+    expect(tree.childCount).to.equal(2);
+    [tree removeAllChildren];
+    expect(tree.childCount).to.equal(0);
+  });
+  
+  it(@"can be removed from his parent tree", ^{
+    VBTree *parent = [[VBTree alloc] initWithContext:@"parent"];
+    [parent appendChild:tree];
+    
+    expect(tree.parent).to.equal(parent);
+    [tree remove];
+    expect(parent.childCount).to.equal(0);
+    expect(tree.parent).to.beNil();
+  });
+  
+  it(@"can find children by his index", ^{
+    VBTree *child1 = [[VBTree alloc] initWithContext:@"child1"];
+    VBTree *child2 = [[VBTree alloc] initWithContext:@"child2"];
+    VBTree *child3 = [[VBTree alloc] initWithContext:@"child3"];
+    
+    [tree appendChild:child1];
+    [tree appendChild:child2];
+    [tree appendChild:child3];
+    
+    expect([tree childAtIndex:0]).to.equal(child1);
+    expect([tree childAtIndex:1]).to.equal(child2);
+    expect([tree childAtIndex:2]).to.equal(child3);
+  });
+  
+  afterEach(^{
+    tree = nil;
+  });
+});
 
-@end
+SpecEnd

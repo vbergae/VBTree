@@ -1,7 +1,11 @@
 PODS:
+  - Expecta (0.3.1)
+  - Specta (0.2.1)
   - VBTree (0.1.2)
 
 DEPENDENCIES:
+  - Expecta
+  - Specta
   - VBTree (from `../VBTree.podspec`)
 
 EXTERNAL SOURCES:
@@ -9,6 +13,8 @@ EXTERNAL SOURCES:
     :path: ../VBTree.podspec
 
 SPEC CHECKSUMS:
+  Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
+  Specta: 9141310f46b1f68b676650ff2854e1ed0b74163a
   VBTree: 1ec418a66a57b5b361a0e0a16d6bece224f6ed5f
 
 COCOAPODS: 0.34.4
