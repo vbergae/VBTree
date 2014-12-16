@@ -129,9 +129,32 @@ describe(@"VBTree", ^{
     expect([tree childAtIndex:2]).to.equal(child3);
   });
   
+  it(@"can apply block to children", ^{
+    VBTree *child1 = [[VBTree alloc] initWithContext:@"child1"];
+    VBTree *child2 = [[VBTree alloc] initWithContext:@"child2"];
+    
+    [tree appendChild:child1];
+    [tree appendChild:child2];
+    
+    [tree applyBlockToChildren:^(VBTree *child, id context) {
+      expect(child).toNot.beNil();
+      expect(context).toNot.beNil();
+      expect(context).to.beKindOf([NSString class]);
+      expect(context).to.equal(@"Block");
+      
+      NSString *nodeContext = [(NSString *)child.context
+                               stringByAppendingString:context];
+      child.context = nodeContext;
+    } context:@"Block"];
+    
+    expect(child1.context).to.equal(@"child1Block");
+    expect(child2.context).to.equal(@"child2Block");
+  });
+  
   afterEach(^{
     tree = nil;
   });
 });
 
 SpecEnd
+
