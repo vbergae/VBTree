@@ -8,6 +8,27 @@
 
 #import <Foundation/Foundation.h>
 
+@class VBTree;
+
+/**
+ Algorithms used to traverse trees
+ */
+typedef NS_ENUM(NSUInteger, VBTreeTraverseAlgorithm) {
+  VBTreeTraverseAlgorithmInorder,
+  VBTreeTraverseAlgorithmPreorder,
+  VbTreeTraverseAlgorithmPostorder,
+  VBTreeTraverseAlgorithmBreadthFirst
+};
+
+/**
+ Traversal block for calling a function on data as we traverse through the tree.
+ 
+ @param node Current traversed node
+ @param context Extra context passed by user in the call to the traverse method
+ @return BOOL YES to continue traversing, NO to stop
+ */
+typedef BOOL (^VBTreeTraverseBlock)(VBTree *node, id context);
+
 /**
  You use VBTree to create tree structures that represent hierarchical organizations
  of information. 
@@ -134,6 +155,25 @@
  @name Traversing the Tree
  */
 
-- (NSArray *)traverse;
+/**
+ Traverses the tree and generates an array using the given search algorithm
+ 
+ @param algorithm Traversal algorithm: inorder, postorder, preorder, bfs
+ @return An array with all children
+ */
+- (NSArray *)arrayWithAlgorithm:(VBTreeTraverseAlgorithm)algorithm;
+
+/**
+ Traverse the tree in sorted order while executing block on every element
+ 
+ @param algorithm Traversal algorithm: inorder, postorder, preorder, bfs
+ @param contextData User defined object that will be passed to block to help do 
+                    things like aggregate calculations.
+ @param block Traversal block to be called on data as we traverse 
+ @return YES if traversed through entire tree, NO if cut short by traversal block
+ */
+- (BOOL)traverseWithAlgorithm:(VBTreeTraverseAlgorithm)algorithm
+                      context:(id)contextData
+                 blockForEach:(VBTreeTraverseBlock)block;
 
 @end
