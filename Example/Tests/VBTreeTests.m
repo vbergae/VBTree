@@ -151,6 +151,26 @@ describe(@"VBTree", ^{
     expect(child2.context).to.equal(@"child2Block");
   });
   
+  it(@"can be traversed with Breadth-first search", ^{
+    VBTree *a     = [[VBTree alloc] initWithContext:@"a"];
+    VBTree *a1    = [[VBTree alloc] initWithContext:@"a1"];
+    VBTree *a11   = [[VBTree alloc] initWithContext:@"a11"];
+    VBTree *a111  = [[VBTree alloc] initWithContext:@"a111"];
+    VBTree *a2    = [[VBTree alloc] initWithContext:@"a2"];
+    VBTree *b     = [[VBTree alloc] initWithContext:@"b"];
+    
+    [tree appendChild:a];
+    [a appendChild:a1];
+    [a1 appendChild:a11];
+    [a11 appendChild:a111];
+    [a appendChild:a2];
+    [tree appendChild:b];
+    
+    NSArray *expected = @[tree, a, b, a1, a2, a11, a111];
+    
+    expect([tree traverse]).to.beSupersetOf(expected);
+  });
+  
   afterEach(^{
     tree = nil;
   });
