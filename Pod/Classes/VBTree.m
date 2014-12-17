@@ -150,27 +150,33 @@ static NSString * const kFunctionContextContextKey  = @"context";
 #pragma mark -
 #pragma mark Traversing the tree
 
-- (NSArray *)traverse
+- (NSArray *)arrayWithAlgorithm:(VBTreeTraverseAlgorithm)algorithm
 {
-  NSMutableSet *visitedNodes = [NSMutableSet setWithObject:self];
-  NSMutableArray *queue   = [NSMutableArray arrayWithObject:self];
-  NSMutableArray *result  = [NSMutableArray arrayWithCapacity:self.childCount];
-  
-  while(queue.count > 0) {
-    VBTree *node = queue.lastObject;
+  __block NSMutableArray *result = [[NSMutableArray alloc] init];
+  [self traverseWithAlgorithm:algorithm
+                      context:nil
+                 blockForEach:^BOOL(VBTree *node, id context)
+  {
     [result addObject:node];
-    
-    NSMutableSet *newNodes = [NSMutableSet setWithArray:node.children];
-    [newNodes minusSet:visitedNodes];
-    [visitedNodes unionSet:newNodes];
-    
-    [queue replaceObjectsInRange:NSMakeRange(0, 0)
-            withObjectsFromArray:newNodes.allObjects];
-    
-    [queue removeLastObject];
-  }
+    return YES;
+  }];
   
   return result;
+}
+
+- (BOOL)traverseWithAlgorithm:(VBTreeTraverseAlgorithm)algorithm
+                      context:(id)contextData
+                 blockForEach:(VBTreeTraverseBlock)block
+{
+  switch (algorithm) {
+    case VBTreeTraverseAlgorithmBreadthFirst:
+      return [self traverseBFSWithContext:contextData blockForEach:block];
+      break;
+      
+    default:
+      return NO;
+      break;
+  }
 }
 
 #pragma mark -
@@ -185,6 +191,44 @@ static NSString * const kFunctionContextContextKey  = @"context";
 {
   return [NSString stringWithFormat:@"VBTree: %@",
           [(id<NSObject>)self.context debugDescription]];
+}
+
+#pragma mark - 
+#pragma mark Private methods
+
+- (BOOL)traverseBFSWithContext:(id)context
+                  blockForEach:(VBTreeTraverseBlock)block
+{
+  BOOL treeCompleted                = YES;
+  NSMutableOrderedSet *visitedNodes = [[NSMutableOrderedSet alloc] init];
+  NSMutableOrderedSet *queue        = [[NSMutableOrderedSet alloc] init];
+  
+  [visitedNodes addObject:self];
+  [queue addObject:self];
+  
+  while(queue.count > 0) {
+    VBTree *node = queue.firstObject;
+    
+    BOOL continueTraversing = YES;
+    if (block) {
+      continueTraversing = block(node, context);
+    }
+    
+    if (!continueTraversing) {
+      treeCompleted = NO;
+      break;
+    }
+    
+    NSMutableOrderedSet *newNodes = [NSMutableOrderedSet orderedSetWithArray:
+                                     node.children];
+    [newNodes minusOrderedSet:visitedNodes];
+    [visitedNodes unionOrderedSet:newNodes];
+    
+    [queue addObjectsFromArray:newNodes.array];
+    [queue removeObjectAtIndex:0];
+  }
+  
+  return treeCompleted;
 }
 
 @end

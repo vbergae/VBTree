@@ -151,7 +151,7 @@ describe(@"VBTree", ^{
     expect(child2.context).to.equal(@"child2Block");
   });
   
-  it(@"can be traversed with Breadth-first search", ^{
+  it(@"can create an array of children with Breadth-first search", ^{
     VBTree *a     = [[VBTree alloc] initWithContext:@"a"];
     VBTree *a1    = [[VBTree alloc] initWithContext:@"a1"];
     VBTree *a11   = [[VBTree alloc] initWithContext:@"a11"];
@@ -167,8 +167,9 @@ describe(@"VBTree", ^{
     [tree appendChild:b];
     
     NSArray *expected = @[tree, a, b, a1, a2, a11, a111];
+    NSArray *result = [tree arrayWithAlgorithm:VBTreeTraverseAlgorithmBreadthFirst];
     
-    expect([tree traverse]).to.beSupersetOf(expected);
+    expect(result).to.equal(expected);
   });
   
   afterEach(^{
