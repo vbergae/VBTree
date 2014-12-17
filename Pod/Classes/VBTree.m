@@ -147,6 +147,46 @@ static NSString * const kFunctionContextContextKey  = @"context";
                                 (__bridge void *)(functionContext));
 }
 
+#pragma mark -
+#pragma mark Traversing the tree
+
+- (NSArray *)traverse
+{
+  NSMutableSet *visitedNodes = [NSMutableSet setWithObject:self];
+  NSMutableArray *queue   = [NSMutableArray arrayWithObject:self];
+  NSMutableArray *result  = [NSMutableArray arrayWithCapacity:self.childCount];
+  
+  while(queue.count > 0) {
+    VBTree *node = queue.lastObject;
+    [result addObject:node];
+    
+    NSMutableSet *newNodes = [NSMutableSet setWithArray:node.children];
+    [newNodes minusSet:visitedNodes];
+    [visitedNodes unionSet:newNodes];
+    
+    [queue replaceObjectsInRange:NSMakeRange(0, 0)
+            withObjectsFromArray:newNodes.allObjects];
+    
+    [queue removeLastObject];
+  }
+  
+  return result;
+}
+
+#pragma mark -
+#pragma mark Debug
+
+- (NSString *)description
+{
+  return self.debugDescription;
+}
+
+- (NSString *)debugDescription
+{
+  return [NSString stringWithFormat:@"VBTree: %@",
+          [(id<NSObject>)self.context debugDescription]];
+}
+
 @end
 
 VBTree * CFTreeToVBTree(CFTreeRef tree)

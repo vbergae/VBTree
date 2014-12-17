@@ -130,4 +130,10 @@
 - (void)applyBlockToChildren:(void(^)(VBTree *child, id context))block
                      context:(id)context;
 
+/**
+ @name Traversing the Tree
+ */
+
+- (NSArray *)traverse;
+
 @end
