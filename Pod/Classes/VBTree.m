@@ -169,12 +169,17 @@ static NSString * const kFunctionContextContextKey  = @"context";
                  blockForEach:(VBTreeTraverseBlock)block
 {
   switch (algorithm) {
+    case VBTreeTraverseAlgorithmInorder:
+      return [self traverseDepthInOrderWithContext:contextData blockForEach:block];
+      break;
+    case VBTreeTraverseAlgorithmPreorder:
+      return [self traverseDepthPreOrderWithContext:contextData blockForEach:block];
+      break;
+    case VbTreeTraverseAlgorithmPostorder:
+      return [self traverseDepthPostOrderWithContext:contextData blockForEach:block];
+      break;
     case VBTreeTraverseAlgorithmBreadthFirst:
       return [self traverseBFSWithContext:contextData blockForEach:block];
-      break;
-      
-    default:
-      return NO;
       break;
   }
 }
@@ -195,6 +200,27 @@ static NSString * const kFunctionContextContextKey  = @"context";
 
 #pragma mark - 
 #pragma mark Private methods
+
+- (BOOL)traverseDepthPreOrderWithContext:(id)context
+                            blockForEach:(VBTreeTraverseBlock)block
+{
+  NSLog(@"'%@' not implemented yet", NSStringFromSelector(_cmd));
+  return NO;
+}
+
+- (BOOL)traverseDepthInOrderWithContext:(id)context
+                           blockForEach:(VBTreeTraverseBlock)block
+{
+  NSLog(@"'%@' not implemented yet", NSStringFromSelector(_cmd));
+  return NO;
+}
+
+- (BOOL)traverseDepthPostOrderWithContext:(id)context
+                             blockForEach:(VBTreeTraverseBlock)block
+{
+  NSLog(@"'%@' not implemented yet", NSStringFromSelector(_cmd));
+  return NO;
+}
 
 - (BOOL)traverseBFSWithContext:(id)context
                   blockForEach:(VBTreeTraverseBlock)block

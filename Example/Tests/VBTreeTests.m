@@ -12,6 +12,25 @@
 
 #import <VBTree/VBTree.h>
 
+#define GENERATE_TREE() VBTree *a = [[VBTree alloc] initWithContext:@"a"];\
+                        VBTree *b = [[VBTree alloc] initWithContext:@"b"];\
+                        VBTree *c = [[VBTree alloc] initWithContext:@"c"];\
+                        VBTree *d = [[VBTree alloc] initWithContext:@"d"];\
+                        VBTree *e = [[VBTree alloc] initWithContext:@"e"];\
+                        VBTree *f = [[VBTree alloc] initWithContext:@"f"];\
+                        VBTree *g = [[VBTree alloc] initWithContext:@"g"];\
+                        VBTree *h = [[VBTree alloc] initWithContext:@"h"];\
+                        VBTree *i = [[VBTree alloc] initWithContext:@"i"];\
+                        \
+                        [f appendChild:b];\
+                        [b appendChild:a];\
+                        [b appendChild:d];\
+                        [d appendChild:c];\
+                        [d appendChild:e];\
+                        [f appendChild:g];\
+                        [g appendChild:i];\
+                        [i appendChild:h];\
+
 SpecBegin(VBTree)
 
 describe(@"VBTree", ^{
@@ -151,23 +170,38 @@ describe(@"VBTree", ^{
     expect(child2.context).to.equal(@"child2Block");
   });
   
+  it(@"can create an array of children with Depth-first search pre-order", ^{
+    GENERATE_TREE();
+    
+    NSArray *expected = @[f, b, a, d, c, e, g, i, h];
+    NSArray *result = [f arrayWithAlgorithm:VBTreeTraverseAlgorithmInorder];
+    
+    expect(result).to.equal(expected);
+  });
+  
+  it(@"can create an array of children with Depth-first search in order", ^{
+    GENERATE_TREE();
+    
+    NSArray *expected = @[a, b, c, d, e, f, g, h, i];
+    NSArray *result = [f arrayWithAlgorithm:VBTreeTraverseAlgorithmInorder];
+    
+    expect(result).to.equal(expected);
+  });
+  
+  it(@"can create an array of children with Depth-first search post-order", ^{
+    GENERATE_TREE();
+    
+    NSArray *expected = @[a, c, e, d, b, h, i, g, f];
+    NSArray *result = [f arrayWithAlgorithm:VBTreeTraverseAlgorithmInorder];
+    
+    expect(result).to.equal(expected);
+  });
+  
   it(@"can create an array of children with Breadth-first search", ^{
-    VBTree *a     = [[VBTree alloc] initWithContext:@"a"];
-    VBTree *a1    = [[VBTree alloc] initWithContext:@"a1"];
-    VBTree *a11   = [[VBTree alloc] initWithContext:@"a11"];
-    VBTree *a111  = [[VBTree alloc] initWithContext:@"a111"];
-    VBTree *a2    = [[VBTree alloc] initWithContext:@"a2"];
-    VBTree *b     = [[VBTree alloc] initWithContext:@"b"];
+    GENERATE_TREE();
     
-    [tree appendChild:a];
-    [a appendChild:a1];
-    [a1 appendChild:a11];
-    [a11 appendChild:a111];
-    [a appendChild:a2];
-    [tree appendChild:b];
-    
-    NSArray *expected = @[tree, a, b, a1, a2, a11, a111];
-    NSArray *result = [tree arrayWithAlgorithm:VBTreeTraverseAlgorithmBreadthFirst];
+    NSArray *expected = @[f, b, g, a, d, i, c, e, h];
+    NSArray *result = [f arrayWithAlgorithm:VBTreeTraverseAlgorithmBreadthFirst];
     
     expect(result).to.equal(expected);
   });
